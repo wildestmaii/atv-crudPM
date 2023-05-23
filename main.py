@@ -13,46 +13,47 @@ db = client['crudCAPI']
 # Selecionar a coleção
 collection = db['teste']
 
+# Criar um documento (Create)
 def criar_documento(documento):
     result = collection.insert_one(documento)
     return result.inserted_id
 
-
-def ler_documento(ObjectId):
-    documento = collection.find_one({'_id': ObjectId})
+# Ler um documento (Read)
+def ler_documento(senha):
+    documento = collection.find_one({'senha': senha})
     return documento
 
-
-def atualizar_documento(ObjectId, novos_dados):
-    result = collection.update_one({'_id': ObjectId}, {'$set': novos_dados})
+# Atualizar um documento (Update)
+def atualizar_documento(senha, novos_dados):
+    result = collection.update_one({'senha': senha}, {'$set': novos_dados})
     return result.modified_count
 
-
-def deletar_documento(ObjectId):
-    result = collection.delete_one({'_id': ObjectId})
+# Deletar um documento (Delete)
+def deletar_documento(senha):
+    result = collection.delete_one({'senha': senha})
     return result.deleted_count
-
 
 def exibir_menu():
     print("---- CADASTRO DE CAPIVARAS ----")
     print("1. Cadastrar nova capivara")
-    print("2. Visualizar capivara por ID")
-    print("3. Atualizar capivara")
-    print("4. Deletar capivara")
+    print("2. Visualizar capivara por senha")
+    print("3. Atualizar capivara por senha")
+    print("4. Deletar capivara por senha")
     print("0. Sair")
 
 
 def cadastrar_capivara():
     nome = input("Digite o nome da capivara: ")
     idade = input("Digite a idade da capivara: ")
-    documento = {"nome": nome, "idade": idade}
-    ObjectId = criar_documento(documento)
-    print("Capivara cadastrada com o ID:", ObjectId)
+    senha = input("Digite a senha da capivara: ")
+    documento = {"nome": nome, "idade": idade, "senha": senha}
+    documento_id = criar_documento(documento)
+    print("Capivara cadastrada com o ID:", documento_id)
 
 
 def visualizar_capivara():
-    documento_id = input("Digite o ID da capivara: ")
-    capivara = ler_documento(documento_id)
+    senha = input("Digite a senha da capivara: ")
+    capivara = ler_documento(senha)
     if capivara:
         print("Capivara encontrada:")
         print("ID:", capivara['_id'])
@@ -62,10 +63,9 @@ def visualizar_capivara():
         print("Capivara não encontrada.")
 
 
-
 def atualizar_capivara():
-    ObjectId = input("Digite o ID da capivara a ser atualizada: ")
-    capivara = ler_documento(ObjectId)
+    senha = input("Digite a senha da capivara a ser atualizada: ")
+    capivara = ler_documento(senha)
     if capivara:
         print("Capivara encontrada:")
         print("ID:", capivara['_id'])
@@ -74,15 +74,15 @@ def atualizar_capivara():
         novo_nome = input("Digite o novo nome da capivara: ")
         nova_idade = input("Digite a nova idade da capivara: ")
         novos_dados = {"nome": novo_nome, "idade": nova_idade}
-        atualizar_documento(ObjectId, novos_dados)
+        atualizar_documento(senha, novos_dados)
         print("Capivara atualizada com sucesso.")
     else:
         print("Capivara não encontrada.")
 
 
 def deletar_capivara():
-    ObjectId = input("Digite o ID da capivara a ser deletada: ")
-    capivara = ler_documento(ObjectId)
+    senha = input("Digite a senha da capivara a ser deletada: ")
+    capivara = ler_documento(senha)
     if capivara:
         print("Capivara encontrada:")
         print("ID:", capivara['_id'])
@@ -90,7 +90,7 @@ def deletar_capivara():
         print("Idade:", capivara['idade'])
         confirmacao = input("Tem certeza que deseja deletar esta capivara? (S/N): ")
         if confirmacao.lower() == 's':
-            deletar_documento(ObjectId)
+            deletar_documento(senha)
             print("Capivara deletada com sucesso.")
         else:
             print("Operação cancelada.")
