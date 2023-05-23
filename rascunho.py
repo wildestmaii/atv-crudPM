@@ -19,38 +19,105 @@ def criar_documento(documento):
     return result.inserted_id
 
 # Ler um documento (Read)
-def ler_documento(documento_id):
-    documento = collection.find_one({'_id': documento_id})
+def ler_documento(senha):
+    documento = collection.find_one({'senha': senha})
     return documento
 
 # Atualizar um documento (Update)
-def atualizar_documento(documento_id, novos_dados):
-    result = collection.update_one({'_id': documento_id}, {'$set': novos_dados})
+def atualizar_documento(senha, novos_dados):
+    result = collection.update_one({'senha': senha}, {'$set': novos_dados})
     return result.modified_count
 
 # Deletar um documento (Delete)
-def deletar_documento(documento_id):
-    result = collection.delete_one({'_id': documento_id})
+def deletar_documento(senha):
+    result = collection.delete_one({'senha': senha})
     return result.deleted_count
 
-# Exemplo de uso
-documento = {'nome': 'Exemplo', 'idade': 25}
+def exibir_menu():
+    print("---- CADASTRO DE CAPIVARAS ----")
+    print("1. Cadastrar nova capivara")
+    print("2. Visualizar capivara por senha")
+    print("3. Atualizar capivara por senha")
+    print("4. Deletar capivara por senha")
+    print("0. Sair")
 
-# Criar um novo documento
-documento_id = criar_documento(documento)
-print('Documento criado com o ID:', documento_id)
 
-# Ler o documento criado
-documento_recuperado = ler_documento(documento_id)
-print('Documento recuperado:', documento_recuperado)
+def cadastrar_capivara():
+    nome = input("Digite o nome da capivara: ")
+    idade = input("Digite a idade da capivara: ")
+    senha = input("Digite a senha da capivara: ")
+    documento = {"nome": nome, "idade": idade, "senha": senha}
+    documento_id = criar_documento(documento)
+    print("Capivara cadastrada com o ID:", documento_id)
 
-# Atualizar o documento
-novos_dados = {'idade': 30}
-atualizar_documento(documento_id, novos_dados)
-documento_atualizado = ler_documento(documento_id)
-print('Documento atualizado:', documento_atualizado)
 
-# Deletar o documento
-deletar_documento(documento_id)
-documento_deletado = ler_documento(documento_id)
-print('Documento deletado:', documento_deletado)
+def visualizar_capivara():
+    senha = input("Digite a senha da capivara: ")
+    capivara = ler_documento(senha)
+    if capivara:
+        print("Capivara encontrada:")
+        print("ID:", capivara['_id'])
+        print("Nome:", capivara['nome'])
+        print("Idade:", capivara['idade'])
+    else:
+        print("Capivara não encontrada.")
+
+
+def atualizar_capivara():
+    senha = input("Digite a senha da capivara a ser atualizada: ")
+    capivara = ler_documento(senha)
+    if capivara:
+        print("Capivara encontrada:")
+        print("ID:", capivara['_id'])
+        print("Nome:", capivara['nome'])
+        print("Idade:", capivara['idade'])
+        novo_nome = input("Digite o novo nome da capivara: ")
+        nova_idade = input("Digite a nova idade da capivara: ")
+        novos_dados = {"nome": novo_nome, "idade": nova_idade}
+        atualizar_documento(senha, novos_dados)
+        print("Capivara atualizada com sucesso.")
+    else:
+        print("Capivara não encontrada.")
+
+
+def deletar_capivara():
+    senha = input("Digite a senha da capivara a ser deletada: ")
+    capivara = ler_documento(senha)
+    if capivara:
+        print("Capivara encontrada:")
+        print("ID:", capivara['_id'])
+        print("Nome:", capivara['nome'])
+        print("Idade:", capivara['idade'])
+        confirmacao = input("Tem certeza que deseja deletar esta capivara? (S/N): ")
+        if confirmacao.lower() == 's':
+            deletar_documento(senha)
+            print("Capivara deletada com sucesso.")
+        else:
+            print("Operação cancelada.")
+    else:
+        print("Capivara não encontrada.")
+
+
+def main():
+    while True:
+        exibir_menu()
+        opcao = input("Digite o número da opção desejada: ")
+
+        if opcao == '1':
+            cadastrar_capivara()
+        elif opcao == '2':
+            visualizar_capivara()
+        elif opcao == '3':
+            atualizar_capivara()
+        elif opcao == '4':
+            deletar_capivara()
+        elif opcao == '0':
+            print("Saindo do programa...")
+            break
+        else:
+            print("Opção inválida. Por favor, escolha uma opção válida.")
+
+
+# Executar o programa
+if __name__ == '__main__':
+    main()
