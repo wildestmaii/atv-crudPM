@@ -7,10 +7,10 @@ connection_string = 'mongodb://localhost:27017/'
 client = MongoClient(connection_string)
 
 # Selecionar o banco de dados
-db = client['nome_do_banco_de_dados']
+db = client['capi']
 
 # Selecionar a coleção
-collection = db['nome_da_colecao']
+collection = db['dados']
 
 
 # Criar um documento
