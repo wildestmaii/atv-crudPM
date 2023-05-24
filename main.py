@@ -1,38 +1,40 @@
 from pymongo import MongoClient
 
-# Configurar a string de conexão do MongoDB Atlas
-# Substitua <username>, <password> e <clustername> pelas suas credenciais e informações do cluster
-connection_string = 'mongodb+srv://maiarameneses:teupai@cluster0.jpwytyh.mongodb.net/crudCAPI?retryWrites=true&w=majority'
-##                   mongodb+srv://maiarameneses:<PASSWORD>@cluster0.jpwytyh.mongodb.net 
+# String de conexão para o MongoDB
+connection_string = 'mongodb://localhost:27017/'
+
 # Criar uma instância do cliente MongoDB
 client = MongoClient(connection_string)
 
 # Selecionar o banco de dados
-db = client['crudCAPI']
+db = client['nome_do_banco_de_dados']
 
 # Selecionar a coleção
-collection = db['teste']
+collection = db['nome_da_colecao']
 
-# Criar um documento (Create)
+
+# Criar um documento
 def criar_documento(documento):
     result = collection.insert_one(documento)
     return result.inserted_id
 
-# Ler um documento (Read)
+# Ler um documento
 def ler_documento(senha):
     documento = collection.find_one({'senha': senha})
     return documento
 
-# Atualizar um documento (Update)
+# Atualizar um documento
 def atualizar_documento(senha, novos_dados):
     result = collection.update_one({'senha': senha}, {'$set': novos_dados})
     return result.modified_count
 
-# Deletar um documento (Delete)
+# Deletar um documento
 def deletar_documento(senha):
     result = collection.delete_one({'senha': senha})
     return result.deleted_count
 
+
+# Interações com o crud
 def exibir_menu():
     print("---- CADASTRO DE CAPIVARAS ----")
     print("1. Cadastrar nova capivara")
